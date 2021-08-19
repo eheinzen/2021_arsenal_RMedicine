@@ -70,6 +70,8 @@ str(mockstudy)
 
 # tableby
 
+A simple pipe table:
+
 \tiny
 
 ```{r}
@@ -81,12 +83,17 @@ summary(tb, text = TRUE)
 
 # tableby
 
+The markdown equivalent:
+
 \tiny
 
 ```{r results='asis'}
 tb <- tableby(arm ~ sex + age, data = mockstudy)
 summary(tb)
 ```
+
+Notice that sex (a categorical) is treated differently from age (continuous). `tableby()` supports categoricals (character, logical, factor),
+numerics, ordered factors, `survival::Surv()` objects, dates, and results from `arsenal::selectall()`.
 
 \normalsize
 
@@ -98,6 +105,8 @@ Common requests:
 
 - Change summary statistics: `tableby.control()` or inline
 
+- Change statistical test (p-value): `tableby.control()` or inline, or `modpval.tableby()`.
+
 - Change decimal points: `tableby.control()` or inline
 
 
@@ -106,7 +115,8 @@ Common requests:
 \tiny
 
 ```{r results='asis'}
-tb <- tableby(arm ~ fe(sex, digits.pct = 0) + notest(age, digits = 1, "median", "q1q3"), data = mockstudy)
+tb <- tableby(arm ~ fe(sex, digits.pct = 0) + notest(age, digits = 1, "median", "q1q3"),
+              data = mockstudy)
 summary(tb, pfootnote = TRUE)
 ```
 
@@ -114,7 +124,7 @@ summary(tb, pfootnote = TRUE)
 
 # tableby
 
-Overall summary:
+Without a by-variable:
 
 \tiny
 
@@ -127,7 +137,7 @@ summary(tb)
 
 # tableby
 
-Stratified, subsetted, and multiple endpoint summary:
+A stratified, subsetted, and multiple endpoint summary:
 
 \tiny
 
@@ -156,9 +166,11 @@ Other features:
 
 # modelsum
 
+The basic table (modeling `alk.phos ~ arm` and `alk.phos ~ ps`)
+
 \tiny
 
-```{r}
+```{r results='asis'}
 ms <- modelsum(alk.phos ~ arm + ps, data = mockstudy)
 summary(ms)
 ```
@@ -167,11 +179,11 @@ summary(ms)
 
 # modelsum
 
-Add common adjustors:
+Add common adjusters:
 
 \tiny
 
-```{r}
+```{r results='asis'}
 ms <- modelsum(alk.phos ~ arm + ps, data = mockstudy, adjust = ~ sex + age)
 summary(ms)
 ```
@@ -180,11 +192,11 @@ summary(ms)
 
 # modelsum
 
-Don't show common adjustors:
+Don't show common adjusters:
 
 \tiny
 
-```{r}
+```{r results='asis'}
 ms <- modelsum(alk.phos ~ arm + ps, data = mockstudy, adjust = ~ sex + age)
 summary(ms, show.adjust = FALSE, show.intercept = FALSE)
 ```
@@ -213,7 +225,7 @@ Other options:
 
 \tiny
 
-```{r}
+```{r results='asis'}
 fl <- freqlist(~ sex + arm + ps, data = mockstudy)
 summary(fl)
 ```
@@ -233,6 +245,15 @@ Other options:
 - Sort: `sort()`
 
 - Merge two tables: `merge()`
+
+# comparedf
+
+```{r}
+mockstudy2 <- muck_up_mockstudy()
+cdf <- comparedf(mockstudy, mockstudy2, by = "case")
+cdf
+# summary(cdf)
+```
 
 # write2
 
