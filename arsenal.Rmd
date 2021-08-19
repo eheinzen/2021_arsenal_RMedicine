@@ -297,7 +297,7 @@ write2pdf(list(
 
 Docs: https://mayoverse.github.io/arsenal/
 
-Issues: https://github.com/mayoverse/arsenal/
+Issues: https://github.com/mayoverse/arsenal/issues/
 
 This presentation: https://github.com/eheinzen/2021_arsenal_RMedicine/tree/Recording
 
