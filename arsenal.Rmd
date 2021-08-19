@@ -234,6 +234,19 @@ summary(fl)
 
 # freqlist
 
+Sorted by frequency:
+
+\tiny
+
+```{r results='asis'}
+fl <- freqlist(~ sex + arm + ps, data = mockstudy)
+summary(sort(fl), dupLabels = TRUE)
+```
+
+\normalsize
+
+# freqlist
+
 Other options:
 
 - `as.data.frame()`, `as.data.frame(summary())`
@@ -242,11 +255,11 @@ Other options:
 
 - Subset variables, change the order, delete variable: `[`, `head()`, `tail()`
 
-- Sort: `sort()`
-
 - Merge two tables: `merge()`
 
 # comparedf
+
+\tiny
 
 ```{r}
 mockstudy2 <- muck_up_mockstudy()
@@ -254,6 +267,8 @@ cdf <- comparedf(mockstudy, mockstudy2, by = "case")
 cdf
 # summary(cdf)
 ```
+
+\normalsize
 
 # write2
 
@@ -263,8 +278,7 @@ Can use other output formats supported by R Markdown.
 
 \tiny
 
-```{r}
-fp <- tempfile(fileext = "pdf")
+```{r results='hide', message=FALSE}
 write2pdf(list(
   tb,
   summary(lm(age ~ sex, data = mockstudy)),
@@ -283,9 +297,9 @@ write2pdf(list(
 
 Docs: https://mayoverse.github.io/arsenal/
 
-Issues: https://github.com/mayoverse/arsenal/issues
+Issues: https://github.com/mayoverse/arsenal/
 
-This presentation: https://github.com/eheinzen/2021_arsenal_RMedicine
+This presentation: https://github.com/eheinzen/2021_arsenal_RMedicine/tree/Recording
 
 Connect with us on Github: `@eheinzen`, `@bethatkinson`, `@sinnweja`, https://github.com/mayoverse/
 
