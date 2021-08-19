@@ -1,0 +1,276 @@
+---
+title: "An {arsenal} of R Functions for Statistical Summaries"
+subtitle: "https://github.com/mayoverse/arsenal"
+author: "Ethan Heinzen, Beth Atkinson, Jason Sinnwell"
+date: "2021-08-26"
+output: 
+  mayodown::mayobeamer:
+    slide_level: 1
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+```
+
+# Motivation
+
+- Mayo Clinic: 3-site research hospital
+
+- Historically a SAS shop
+
+- Now ~500 R users
+
+- A SAS license negotiation revealed our dependency on SAS
+
+- How to port in-house macros and other SAS procedures to R?
+
+# rlocal
+
+- First started with an internal-only package: `rlocal`
+
+- Contained some "private" functions, some "public" functions
+
+- Decided to separate "public" into a CRAN package
+
+# arsenal
+
+- Goal: mimic and improve SAS functionality "easily"
+
+- v0.1.2 on CRAN Dec 30, 2016
+
+- Major releases Feb 2018, Jan 2019, and March 2019
+
+- Minor releases every couple of months
+
+# Functions
+
+- `tableby()` $\equiv$ `%table()`: create a table 1
+
+- `paired()` $\equiv$ `%paired()`: create a table 1 for paired data
+
+- `modelsum()` $\equiv$ `%modelsum()`: fit models over a set of independent variables
+
+- `freqlist()` $\equiv$ `PROC FREQ`: compile frequency table
+
+- `comparedf()` $\equiv$ `PROC COMPARE`: compare two datasets
+
+- `write2*()` $\approx$ `ODS OUTPUT`: output results to a file
+
+# The dataset
+
+\tiny
+
+```{r}
+library(arsenal)
+data(mockstudy)
+str(mockstudy)
+```
+
+\normalsize
+
+# tableby
+
+\tiny
+
+```{r}
+tb <- tableby(arm ~ sex + age, data = mockstudy)
+summary(tb, text = TRUE)
+```
+
+\normalsize
+
+# tableby
+
+\tiny
+
+```{r results='asis'}
+tb <- tableby(arm ~ sex + age, data = mockstudy)
+summary(tb)
+```
+
+\normalsize
+
+# tableby
+
+Common requests:
+
+- Change labels: `set_labels()`, `labels()<-`, `labelTranslations=`
+
+- Change summary statistics: `tableby.control()` or inline
+
+- Change decimal points: `tableby.control()` or inline
+
+
+# tableby
+
+\tiny
+
+```{r results='asis'}
+tb <- tableby(arm ~ fe(sex, digits.pct = 0) + notest(age, digits = 1, "median", "q1q3"), data = mockstudy)
+summary(tb, pfootnote = TRUE)
+```
+
+\normalsize
+
+# tableby
+
+Overall summary:
+
+\tiny
+
+```{r results='asis'}
+tb <- tableby( ~ sex + age, data = mockstudy)
+summary(tb)
+```
+
+\normalsize
+
+# tableby
+
+Stratified, subsetted, and multiple endpoint summary:
+
+\tiny
+
+```{r results='asis'}
+tb <- tableby(list(arm, sex) ~ age, strata = ps, data = mockstudy, subset = ps %in% 0:1)
+summary(tb)
+```
+
+\normalsize
+
+# tableby
+
+Other features:
+
+- `as.data.frame()`, `as.data.frame(summary())`
+
+- Subset variables, change the order, delete variable: `[`, `head()`, `tail()`
+
+- Sort by p-value: `sort()`
+
+- Filter by p-value: `<`, `<=`, `>`, `>=`, etc.
+
+- Merge two tables: `merge()`
+
+- Custom p-values and user statistics
+
+# modelsum
+
+\tiny
+
+```{r}
+ms <- modelsum(alk.phos ~ arm + ps, data = mockstudy)
+summary(ms)
+```
+
+\normalsize
+
+# modelsum
+
+Add common adjustors:
+
+\tiny
+
+```{r}
+ms <- modelsum(alk.phos ~ arm + ps, data = mockstudy, adjust = ~ sex + age)
+summary(ms)
+```
+
+\normalsize
+
+# modelsum
+
+Don't show common adjustors:
+
+\tiny
+
+```{r}
+ms <- modelsum(alk.phos ~ arm + ps, data = mockstudy, adjust = ~ sex + age)
+summary(ms, show.adjust = FALSE, show.intercept = FALSE)
+```
+
+\normalsize
+
+# modelsum
+
+Other options:
+
+- Change model "family": Poisson, Binomial, Survival, Negative Binomial, Ordinal, Conditional Logistic, Relative Risk
+
+- Change labels: `labels()<-`, `set_labels()`, `labelTranslations=`
+
+- Change decimal places: `modelsum.control()`
+
+- Change summary statistics: `modelsum.control()`
+
+- `as.data.frame()`, `as.data.frame(summary())`
+
+- Subset variables, change the order, delete variable: `[`, `head()`, `tail()`
+
+- Merge two tables: `merge()`
+
+# freqlist
+
+\tiny
+
+```{r}
+fl <- freqlist(~ sex + arm + ps, data = mockstudy)
+summary(fl)
+```
+
+\normalsize
+
+# freqlist
+
+Other options:
+
+- `as.data.frame()`, `as.data.frame(summary())`
+
+- Change labels: `labels()<-`, `set_labels()`, `labelTranslations=`
+
+- Subset variables, change the order, delete variable: `[`, `head()`, `tail()`
+
+- Sort: `sort()`
+
+- Merge two tables: `merge()`
+
+# write2
+
+Three main functions: `write2word()`, `write2pdf()`, `write2html()`
+
+Can use other output formats supported by R Markdown.
+
+\tiny
+
+```{r}
+fp <- tempfile(fileext = "pdf")
+write2pdf(list(
+  tb,
+  summary(lm(age ~ sex, data = mockstudy)),
+  "\\newpage",
+  "# My modelsum table",
+  ms,
+  code.chunk(1 + 1)
+), file = "test.pdf")
+```
+
+\normalsize
+
+
+# Resources
+
+
+Docs: https://mayoverse.github.io/arsenal/
+
+Issues: https://github.com/mayoverse/arsenal/issues
+
+This presentation: https://github.com/eheinzen/2021_arsenal_RMedicine
+
+Connect with us on Github: `@eheinzen`, `@bethatkinson`, `@sinnweja`, https://github.com/mayoverse/
+
+
+
+
+
+
+
