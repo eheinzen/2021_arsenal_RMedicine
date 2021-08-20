@@ -270,6 +270,32 @@ cdf
 
 \normalsize
 
+
+# comparedf
+
+\tiny
+
+```{r}
+cdf <- comparedf(mockstudy, mockstudy2, by = "case", int.as.num = TRUE,
+                 factor.as.char = TRUE, tol.vars = "case")
+cdf
+```
+
+\normalsize
+
+
+# comparedf
+
+\tiny
+
+```{r}
+tail(diffs(cdf))
+diffs(cdf, by.var = TRUE)
+
+```
+
+\normalsize
+
 # write2
 
 Three main functions: `write2word()`, `write2pdf()`, `write2html()`
